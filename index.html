@@ -5,24 +5,29 @@
     <title>Boolflix</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.min.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" />
+    <link rel="stylesheet" href="css/style.css">
   </head>
   <body>
-
     <header>
       <input type="text" id="search">
       <button id="send-search">Search</button>
     </header>
-
+    <h2>Film</h2>
     <ul id="list-movies">
 
     </ul>
+    <h2>Series</h2>
+    <ul id="list-series">
 
+    </ul>
     <script id="movie-template" type="text/x-handlebars-template">
       <li>
         <h3>{{title}}</h3>
+        <p>{{type}}</p>
         <h4>Titlo Originale: {{title_orginal}}</h4>
-        <p>Lingua Originale: {{lang}}</p>
-        <p>Media voto: <strong>{{vote}}</strong></p>
+        <p>Lingua Originale: {{{lang}}}</p>
+        <p>Media voto: {{{vote}}}</p>
       </li>
     </script>
     <script src="js/script.js" charset="utf-8"></script>
