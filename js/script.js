@@ -2,55 +2,35 @@ $(document).ready(function() {
 
   // click sul bottone di ricerca
   $("#send-search").click(function(){
-    // prendere il valore della input
-    var searchMovie = $("#search").val();
-    resetSearch();
-    getMovies(searchMovie);
-    getSeries(searchMovie);
+    search();
   });
 
   // avvio la ricerca tramite il tasto invio
   $("#search").keyup(function(event) {
     if(event.which == 13) {
-      // prendere il valore della input
-      var searchMovie = $("#search").val();
-      resetSearch();
-      getMovies(searchMovie);
-      getSeries(searchMovie);
+      search();
     }
   });
 
 });
 
-// funzione che si occupa di contattare le api per i film e stampa il risultato
-function getMovies(searchString) {
-  // eseguire una chiamata al server per recuperare i film
-  $.ajax(
-    {
-      "url": "https://api.themoviedb.org/3/search/movie",
-      "data": {
-        "api_key": "51a580ca8c75a33ea40810a340044302",
-        "query": searchString,
-        "language": "it-IT"
-      },
-      "method": "GET",
-      "success": function(data) {
-        renderResults("film",data.results);
-      },
-      "error": function(err) {
-        alert("Errore!");
-      }
-    }
-  );
-
+// funzione di rcerca generica
+function search() {
+  // prendere il valore della input
+  var searchMovie = $("#search").val();
+  resetSearch();
+  // recupero i film
+  getData("movie", searchMovie);
+  // recupero le serie tv
+  getData("tv", searchMovie);
 }
 
-// funzione che si occupa di contattare le api per le serie tv e stampa il risultato
-function getSeries(searchString) {
+// funzione generica getData
+function getData(type, searchString) {
   // eseguire una chiamata al server per recuperare le serie tv
   $.ajax(
     {
-      "url": "https://api.themoviedb.org/3/search/tv",
+      "url": "https://api.themoviedb.org/3/search/"+type,
       "data": {
         "api_key": "51a580ca8c75a33ea40810a340044302",
         "query": searchString,
@@ -58,14 +38,13 @@ function getSeries(searchString) {
       },
       "method": "GET",
       "success": function(data) {
-        renderResults("tv",data.results);
+        renderResults(type,data.results);
       },
       "error": function(err) {
         alert("Errore!");
       }
     }
   );
-
 }
 
 // funzione che stampa il risultato
@@ -78,7 +57,7 @@ function renderResults(type, results) {
 
     var title, original_title, container;
 
-    if(type == "film") {
+    if(type == "movie") {
       title = results[i].title;
       original_title = results[i].original_title;
       container = $("#list-movies");
