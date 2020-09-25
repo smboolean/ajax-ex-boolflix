@@ -88,8 +88,15 @@ function renderResults(type, results) {
       container = $("#list-series");
     }
 
+    if(results[i].poster_path == null) {
+      var poster = "img/no_poster.png";
+    } else {
+      var poster = "https://image.tmdb.org/t/p/w342"+results[i].poster_path;
+    }
+
     // prepariamo il nostro context
     var context = {
+      "poster": poster,
       "title": title,
       "title_orginal": original_title,
       "lang": printFlags(results[i].original_language),
