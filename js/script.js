@@ -1,3 +1,6 @@
+// Milestone 5 (Opzionale):
+// Partendo da un film o da una serie, richiedere all'API quali sono gli attori che fanno parte del cast aggiungendo alla nostra scheda Film / Serie SOLO i primi 5 restituiti dall’API con Nome e Cognome, e i generi associati al film con questo schema: “Genere 1, Genere 2, …”.
+
 $(document).ready(function() {
 
   // click sul bottone di ricerca
@@ -51,6 +54,46 @@ function getData(type, searchString) {
   );
 }
 
+// funzione per recuperare i dettagli di film e serie tv
+function getDetails(type, id) {
+  // eseguire una chiamata al server per recuperare il cast
+  $.ajax(
+    {
+      "url": "https://api.themoviedb.org/3/"+type+"/"+id+"/credits",
+      "data": {
+        "api_key": "51a580ca8c75a33ea40810a340044302",
+      },
+      "method": "GET",
+      "success": function(data) {
+        if(data.cast.length > 0) {
+          printDetails(data.cast, id, "cast");
+        }
+      },
+      "error": function(err) {
+        alert("Errore!");
+      }
+    }
+  );
+  // eseguire una chiamata al server per recuperare i genres
+  $.ajax(
+    {
+      "url": "https://api.themoviedb.org/3/"+type+"/"+id,
+      "data": {
+        "api_key": "51a580ca8c75a33ea40810a340044302",
+      },
+      "method": "GET",
+      "success": function(data) {
+        if(data.genres.length > 0) {
+          printDetails(data.genres, id, "genres");
+        }
+      },
+      "error": function(err) {
+        alert("Errore!");
+      }
+    }
+  );
+}
+
 // funzione che stampa il risultato
 function renderResults(type, results) {
 
@@ -84,15 +127,51 @@ function renderResults(type, results) {
       "title_orginal": original_title,
       "lang": printFlags(results[i].original_language),
       "vote": printStars(results[i].vote_average),
-      "type": type
+      "type": type,
+      "id": results[i].id
     };
 
     // prepariamo il nostro html
     var html = template(context);
     // iniettiamo il nostro html nel tag ul
     container.append(html);
+
+    // andiamo a prendere i dettagli
+    getDetails(type, results[i].id);
   }
 
+}
+
+// funzione che stampa i dettagli di film / serie tv
+function printDetails(data, id, list) {
+
+  var source = $("#cast-template").html();
+  var template = Handlebars.compile(source);
+
+  var limit;
+  if(data.length > 4) {
+    limit = 5;
+  } else {
+    limit = data.length;
+  }
+
+  for (var i = 0; i < limit; i++) {
+
+    var context = {
+      "name": data[i].name
+    };
+
+    var html = template(context);
+
+    var container;
+    if(list == "cast") {
+      container = $("li[data-id='"+id+"'] .cast");
+    } else if(list == "genres") {
+      container = $("li[data-id='"+id+"'] .genres");
+    }
+
+    container.append(html);
+  }
 }
 
 // funzione che stampa "la ricerca non ha prodotto risultati"

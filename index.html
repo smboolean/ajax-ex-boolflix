@@ -22,18 +22,22 @@
 
     </ul>
     <script id="movie-template" type="text/x-handlebars-template">
-      <li>
+      <li data-id="{{id}}">
         <div><img src="{{poster}}" alt="{{title}}"></div>
         <h3>{{title}}</h3>
         <p>{{type}}</p>
         <h4>Titlo Originale: {{title_orginal}}</h4>
         <p>Lingua Originale: {{{lang}}}</p>
         <p>Media voto: {{{vote}}}</p>
+        <h4>Cast</h4>
+        <ul class="cast"></ul>
+        <h4>Generi</h4>
+        <ul class="genres"></ul>
       </li>
     </script>
 
-    <script id="not-found-template" type="text/x-handlebars-template">
-      <li>La ricerca non ha prodotto risultati</li>
+    <script id="cast-template" type="text/x-handlebars-template">
+      <li>{{name}}</li>
     </script>
     <script src="js/script.js" charset="utf-8"></script>
   </body>
