@@ -38,7 +38,11 @@ function getData(type, searchString) {
       },
       "method": "GET",
       "success": function(data) {
-        renderResults(type,data.results);
+        if(data.total_results > 0) {
+          renderResults(type,data.results);
+        } else {
+          notFound(type);
+        }
       },
       "error": function(err) {
         alert("Errore!");
@@ -89,6 +93,23 @@ function renderResults(type, results) {
     container.append(html);
   }
 
+}
+
+// funzione che stampa "la ricerca non ha prodotto risultati"
+function notFound(type) {
+  var container;
+  if(type == "movie") {
+    container = $("#list-movies");
+  } else if(type == "tv") {
+    container = $("#list-series");
+  }
+
+  var source = $("#not-found-template").html();
+  var template = Handlebars.compile(source);
+  // prepariamo il nostro html
+  var html = template();
+  // iniettiamo il nostro html nel tag ul
+  container.append(html);
 }
 
 // funzione che svuota il campo input per la ricerca e la nostra lista
